@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ali Raza SMM Panel - Premium Social Booster</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: #151c2e;
+      --accent-color: #7c3aed;
+      --accent-hover: #6d28d9;
+      --text-color: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #2e374a;
+      --glow-color: rgba(124, 58, 237, 0.25);
+    }
+
+    * { box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; display: flex; justify-content: center; }
+
+    .container { width: 100%; max-width: 550px; }
+    
+    /* Dill SMM Style Header Card */
+    .header-card {
+      background: linear-gradient(135deg, #1e1b4b 0%, #151c2e 100%);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 30px -10px var(--glow-color);
+      border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 20px;
+    }
+
+    .brand-title { font-size: 26px; font-weight: 800; color: #fff; margin: 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .brand-title i { color: #8b5cf6; }
+
+    .user-badge { background: rgba(124, 58, 237, 0.15); border: 1px solid #7c3aed; color: #a78bfa; font-size: 13px; padding: 6px 14px; border-radius: 20px; display: inline-block; margin-top: 10px; }
+
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+    .stat-card { background: var(--bg-color); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; text-align: center; }
+    .stat-val { font-size: 20px; font-weight: bold; color: #38bdf8; }
+    .stat-lbl { font-size: 12px; color: var(--text-muted); }
+
+    /* Main Section Cards */
+    .panel-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 22px; margin-bottom: 20px; }
+    .section-title { font-size: 16px; font-weight: 700; color: #fff; margin-top: 0; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+
+    /* Payment Box */
+    .payment-box { background: #0f172a; border: 1px dashed #38bdf8; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+    .account-num { font-size: 22px; font-weight: 800; color: #4ade80; text-align: center; letter-spacing: 1px; margin: 5px 0; }
+    
+    label { font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-top: 12px; }
+    input, select { width: 100%; padding: 12px; margin-top: 6px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-color); color: #fff; font-size: 14px; outline: none; }
+    input:focus, select:focus { border-color: #8b5cf6; }
+
+    .btn-primary { width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%); color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: transform 0.2s, opacity 0.2s; margin-top: 15px; }
+    .btn-primary:hover { opacity: 0.95; transform: translateY(-1px); }
+
+    /* Floating WhatsApp Button */
+    .whatsapp-btn {
+      position: fixed; bottom: 25px; right: 25px; background: #22c55e; color: #fff; border-radius: 50px; padding: 12px 20px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4); text-decoration: none; z-index: 999;
+    }
+    .whatsapp-btn i { font-size: 20px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header-card">
+      <div class="brand-title"><i class="fa-solid fa-bolt"></i> DILL SMM PANEL</div>
+      <div class="user-badge" id="userDisplay"><i class="fa-solid fa-user"></i> Guest Account</div>
+      
+      <div style="display: flex; justify-content: center; margin-top: 15px;">
+        <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID" data-callback="handleLogin"></div>
+        <div class="g_id_signin" data-type="standard"></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-val" id="userBalance">$0.00</div>
+          <div class="stat-lbl">Available Balance</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="totalOrders">0</div>
+          <div class="stat-lbl">Total Orders</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deposit Section -->
+    <div class="panel-card">
+      <div class="section-title"><i class="fa-solid fa-wallet" style="color:#4ade80;"></i> Deposit Funds (Auto Approval)</div>
+      <div class="payment-box">
+        <div style="text-align:center; font-size:13px; color:var(--text-muted);">EasyPaisa & JazzCash Direct</div>
+        <div class="account-num">03106840170</div>
+        <div style="text-align:center; font-size:12px; color:#a78bfa;">Account Title: <b>Ali Raza</b></div>
+      </div>
+
+      <label>Payment Method</label>
+      <select id="payMethod">
+        <option value="EasyPaisa">EasyPaisa (03106840170)</option>
+        <option value="JazzCash">JazzCash (03106840170)</option>
+      </select>
+
+      <label>Transaction ID (TrxID)</label>
+      <input type="text" id="trxId" placeholder="Enter 11-digit TrxID e.g. 219830211" />
+
+      <label>Amount Paid ($ / PKR)</label>
+      <input type="number" id="depAmount" placeholder="Enter deposited amount" />
+
+      <button class="btn-primary" onclick="submitDeposit()"><i class="fa-solid fa-paper-plane"></i> Submit Payment Verification</button>
+    </div>
+
+    <!-- New Order Section -->
+    <div class="panel-card">
+      <div class="section-title"><i class="fa-solid fa-cart-shopping" style="color:#38bdf8;"></i> Place New Order</div>
+
+      <label>Category / Service</label>
+      <select id="service" onchange="calcPrice()">
+        <option value="1" data-price="1.50">🔥 Instagram Followers [Real/Refill] - $1.50 / 1k</option>
+        <option value="2" data-price="0.90">⚡ TikTok Real Likes - $0.90 / 1k</option>
+        <option value="3" data-price="2.20">🚀 YouTube Monetized Views - $2.20 / 1k</option>
+      </select>
+
+      <label>Target URL / Profile Link</label>
+      <input type="text" id="targetLink" placeholder="https://instagram.com/username" />
+
+      <label>Quantity</label>
+      <input type="number" id="qty" value="1000" oninput="calcPrice()" />
+
+      <div style="margin-top:15px; font-size:15px; color:var(--text-muted); display:flex; justify-content:space-between;">
+        <span>Total Cost:</span>
+        <strong id="totalPrice" style="color:#38bdf8; font-size:18px;">$1.50</strong>
+      </div>
+
+      <button class="btn-primary" onclick="placeOrder()"><i class="fa-solid fa-rocket"></i> Submit Order</button>
+    </div>
+  </div>
+
+  <!-- WhatsApp Support Floating Widget -->
+  <a href="https://wa.me/923100198156?text=Hello%20Ali%20Raza,%20mujhe%20SMM%20Panel%20se%20related%20help%20chahiye." target="_blank" class="whatsapp-btn">
+    <i class="fa-brands fa-whatsapp"></i> Live Support
+  </a>
+
+  <script>
+    let userEmail = "guest@gmail.com";
+
+    function handleLogin(response) {
+      const payload = JSON.parse(atob(response.credential.split('.')[1]));
+      userEmail = payload.email;
+      document.getElementById('userDisplay').innerHTML = `<i class="fa-solid fa-circle-check" style="color:#4ade80;"></i> ${payload.name}`;
+      loadUser();
+    }
+
+    async function loadUser() {
+      const res = await fetch('/api/user/' + userEmail);
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('userBalance').innerText = '$' + data.user.balance.toFixed(2);
+        document.getElementById('totalOrders').innerText = data.orders.length;
+      }
+    }
+
+    function calcPrice() {
+      const sel = document.getElementById('service');
+      const p = parseFloat(sel.options[sel.selectedIndex].getAttribute('data-price'));
+      const q = parseInt(document.getElementById('qty').value) || 0;
+      document.getElementById('totalPrice').innerText = '$' + ((q / 1000) * p).toFixed(2);
+    }
+
+    async function submitDeposit() {
+      const trxId = document.getElementById('trxId').value;
+      const amount = document.getElementById('depAmount').value;
+      const method = document.getElementById('payMethod').value;
+
+      if(!trxId || !amount) return alert('Karam karke TrxID aur Amount dono enter karein!');
+
+      const res = await fetch('/api/deposit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email: userEmail, trxId, amount, method })
+      });
+      const data = await res.json();
+      alert(data.message || data.error);
+    }
+
+    async function placeOrder() {
+      const serviceId = document.getElementById('service').value;
+      const link = document.getElementById('targetLink').value;
+      const quantity = parseInt(document.getElementById('qty').value);
+      const sel = document.getElementById('service');
+      const pricePerThousand = parseFloat(sel.options[sel.selectedIndex].getAttribute('data-price'));
+
+      if(!link || quantity < 100) return alert('Link aur Quantity sahi enter karein!');
+
+      const res = await fetch('/api/order', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email: userEmail, serviceId, link, quantity, pricePerThousand })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(data.message);
+        loadUser();
+      } else {
+        alert(data.error);
+      }
+    }
+  </script>
+</body>
+</html>

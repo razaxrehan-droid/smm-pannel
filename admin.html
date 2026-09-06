@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Approval Panel</title>
+  <style>
+    body { background: #0f172a; color: #fff; font-family: sans-serif; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #334155; padding: 12px; text-align: left; }
+    th { background: #1e293b; color: #38bdf8; }
+    button { background: #22c55e; color: #fff; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>🔑 Admin Deposit Approvals</h2>
+  <button onclick="loadDeposits()">Refresh Requests</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>User Email</th>
+        <th>Method</th>
+        <th>TrxID</th>
+        <th>Amount</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="depositTable"></tbody>
+  </table>
+
+  <script>
+    async function loadDeposits() {
+      const res = await fetch('/api/admin/deposits');
+      const data = await res.json();
+      const tbody = document.getElementById('depositTable');
+      tbody.innerHTML = '';
+
+      data.deposits.forEach(dep => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${dep.email}</td>
+            <td>${dep.method}</td>
+            <td><b>${dep.trxId}</b></td>
+            <td>$${dep.amount}</td>
+            <td><button onclick="approve('${dep._id}')">Approve & Add Balance</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    async function approve(depositId) {
+      const res = await fetch('/api/admin/approve-deposit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ depositId })
+      });
+      const data = await res.json();
+      alert(data.message);
+      loadDeposits();
+    }
+
+    loadDeposits();
+  </script>
+</body>
+</html>
