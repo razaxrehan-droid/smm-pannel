@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raza SMM Panel - Modern Social Booster</title>
+  <!-- Google Auth Library -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --green: #10b981;
+      --text-main: #f9fafb;
+      --text-sub: #9ca3af;
+    }
+
+    * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; }
+
+    /* ================= LOGIN SCREEN ================= */
+    #authScreen {
+      display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px;
+      background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%);
+    }
+    .auth-card {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px;
+      padding: 40px 30px; width: 100%; max-width: 420px; text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    .auth-logo { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .auth-logo i { color: var(--accent); }
+    .auth-subtitle { color: var(--text-sub); font-size: 14px; margin-bottom: 30px; }
+
+    /* ================= MAIN DASHBOARD APP ================= */
+    #appScreen { display: none; min-height: 100vh; flex-direction: column; }
+
+    /* Top Navigation Header */
+    .top-nav {
+      background: var(--card-bg); border-bottom: 1px solid var(--card-border);
+      padding: 15px 25px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-brand { font-size: 20px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .nav-brand i { color: var(--accent); }
+    .user-profile { display: flex; align-items: center; gap: 15px; }
+    .balance-pill { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--green); color: var(--green); padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 14px; }
+
+    /* Navigation Tabs Bar */
+    .tabs-bar {
+      background: #0f172a; border-bottom: 1px solid var(--card-border);
+      display: flex; gap: 5px; padding: 10px 20px; overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent; border: none; color: var(--text-sub); padding: 10px 18px;
+      border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: 0.2s;
+    }
+    .tab-btn:hover, .tab-btn.active { background: var(--card-bg); color: #fff; }
+    .tab-btn.active { border: 1px solid var(--card-border); color: var(--accent); }
+
+    /* Main Content Area */
+    .content-area { padding: 25px; max-width: 900px; margin: 0 auto; width: 100%; flex: 1; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Standard Cards & Controls */
+    .panel-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; margin-bottom: 20px; }
+    .card-title { font-size: 18px; font-weight: 700; margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    
+    label { font-size: 13px; font-weight: 600; color: var(--text-sub); display: block; margin-top: 15px; }
+    input, select { width: 100%; padding: 12px 15px; margin-top: 6px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--bg-dark); color: #fff; font-size: 14px; outline: none; }
+    input:focus, select:focus { border-color: var(--accent); }
+
+    .btn-submit {
+      width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--accent);
+      color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.2s;
+    }
+    .btn-submit:hover { background: var(--accent-hover); }
+
+    /* Deposit Specific Payment Card */
+    .payment-card-info { background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); border: 1px dashed var(--accent); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
+    .pay-num { font-size: 26px; font-weight: 800; color: var(--green); letter-spacing: 1px; margin: 8px 0; }
+
+    /* Services Table Design */
+    .services-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .services-table th, .services-table td { padding: 14px; text-align: left; border-bottom: 1px solid var(--card-border); font-size: 14px; }
+    .services-table th { color: var(--text-sub); font-weight: 600; background: #0f172a; }
+
+    /* Floating WhatsApp Button */
+    .whatsapp-float {
+      position: fixed; bottom: 25px; right: 25px; background: #22c55e; color: #fff; border-radius: 50px;
+      padding: 12px 22px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4); text-decoration: none; z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. SIGN-IN SCREEN (Initial View) -->
+  <div id="authScreen">
+    <div class="auth-card">
+      <div class="auth-logo"><i class="fa-solid fa-crown"></i> Raza SMM Panel</div>
+      <p class="auth-subtitle">Log in with Google to access dashboard & place orders.</p>
+      
+      <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <div id="g_id_onload"
+          data-client_id="785917159432-hbt7ukpa1svgkuj907dgqm6tro9s657d.apps.googleusercontent.com"
+          data-callback="handleCredentialResponse">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MAIN APPLICATION (Post Login) -->
+  <div id="appScreen">
+    <!-- Top Nav Header -->
+    <div class="top-nav">
+      <div class="nav-brand"><i class="fa-solid fa-crown"></i> Raza SMM Panel</div>
+      <div class="user-profile">
+        <div class="balance-pill">Balance: <span id="userBalance">$0.00</span></div>
+        <span id="userName" style="font-size:14px; font-weight:600;"></span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+      <button class="tab-btn" onclick="switchTab('order')"><i class="fa-solid fa-cart-plus"></i> New Order</button>
+      <button class="tab-btn" onclick="switchTab('deposit')"><i class="fa-solid fa-wallet"></i> Deposit Funds</button>
+      <button class="tab-btn" onclick="switchTab('services')"><i class="fa-solid fa-list-check"></i> All Services</button>
+    </div>
+
+    <!-- Main Content Panels -->
+    <div class="content-area">
+
+      <!-- TAB 1: DASHBOARD OVERVIEW -->
+      <div id="tab-dashboard" class="tab-content active">
+        <div class="panel-card">
+          <h3 class="card-title"><i class="fa-solid fa-house" style="color:var(--accent);"></i> Welcome to Raza SMM Panel</h3>
+          <p style="color:var(--text-sub); line-height: 1.6;">Apne social media accounts ko instantly boost karein. Services, orders aur balance manage karne ke liye upar diye gaye tabs use karein.</p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+            <div style="background:var(--bg-dark); padding:20px; border-radius:14px; border:1px solid var(--card-border);">
+              <div style="color:var(--text-sub); font-size:12px;">ACCOUNT STATUS</div>
+              <div style="font-size:18px; font-weight:700; color:var(--green); margin-top:5px;">Active Member</div>
+            </div>
+            <div style="background:var(--bg-dark); padding:20px; border-radius:14px; border:1px solid var(--card-border);">
+              <div style="color:var(--text-sub); font-size:12px;">PAYMENT NUMBER</div>
+              <div style="font-size:16px; font-weight:700; color:#38bdf8; margin-top:5px;">03106840170</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: NEW ORDER -->
+      <div id="tab-order" class="tab-content">
+        <div class="panel-card">
+          <h3 class="card-title"><i class="fa-solid fa-rocket" style="color:#38bdf8;"></i> Place New Order</h3>
+
+          <label>Select Service Category</label>
+          <select id="service" onchange="calculateCost()">
+            <option value="1" data-price="1.50">🔥 Instagram Followers [Refill Guaranteed] - $1.50 / 1000</option>
+            <option value="2" data-price="0.90">⚡ TikTok Real Active Likes - $0.90 / 1000</option>
+            <option value="3" data-price="2.20">🚀 YouTube Monetization High Watchtime Views - $2.20 / 1000</option>
+            <option value="4" data-price="1.10">💬 Facebook Page Likes & Followers - $1.10 / 1000</option>
+          </select>
+
+          <label>Target Profile / Video URL</label>
+          <input type="text" id="targetLink" placeholder="https://instagram.com/your-page" />
+
+          <label>Quantity</label>
+          <input type="number" id="quantity" value="1000" oninput="calculateCost()" />
+
+          <div style="margin-top: 20px; padding: 15px; background: var(--bg-dark); border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="color:var(--text-sub);">Total Charge Amount:</span>
+            <strong id="totalCharge" style="font-size: 20px; color: var(--accent);">$1.50</strong>
+          </div>
+
+          <button class="btn-submit" onclick="submitOrder()"><i class="fa-solid fa-paper-plane"></i> Submit Order Now</button>
+        </div>
+      </div>
+
+      <!-- TAB 3: DEPOSIT FUNDS -->
+      <div id="tab-deposit" class="tab-content">
+        <div class="panel-card">
+          <h3 class="card-title"><i class="fa-solid fa-credit-card" style="color:var(--green);"></i> Deposit Wallet Balance</h3>
+
+          <div class="payment-card-info">
+            <div style="font-size:13px; color:var(--text-sub);">EasyPaisa & JazzCash Manual Deposit</div>
+            <div class="pay-num">03106840170</div>
+            <div style="font-size:12px; color:var(--accent);">Account Title: <b>Ali Raza</b></div>
+          </div>
+
+          <label>Select Payment Gateway</label>
+          <select id="payMethod">
+            <option value="EasyPaisa">EasyPaisa (03106840170)</option>
+            <option value="JazzCash">JazzCash (03106840170)</option>
+          </select>
+
+          <label>Transaction ID (TrxID)</label>
+          <input type="text" id="trxId" placeholder="Enter 11-Digit Transaction ID" />
+
+          <label>Amount Sent ($ / PKR)</label>
+          <input type="number" id="depositAmount" placeholder="Enter Amount" />
+
+          <button class="btn-submit" style="background:var(--green);" onclick="submitDeposit()"><i class="fa-solid fa-check-circle"></i> Verify & Add Funds Request</button>
+        </div>
+      </div>
+
+      <!-- TAB 4: ALL SERVICES DIRECTORY -->
+      <div id="tab-services" class="tab-content">
+        <div class="panel-card">
+          <h3 class="card-title"><i class="fa-solid fa-list" style="color:#f59e0b;"></i> Available Service Catalog</h3>
+
+          <div style="overflow-x: auto;">
+            <table class="services-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Service Description</th>
+                  <th>Rate per 1k</th>
+                  <th>Min Order</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Instagram Followers [High Quality]</td>
+                  <td><span style="color:var(--green); font-weight:700;">$1.50</span></td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>TikTok Organic Post Likes</td>
+                  <td><span style="color:var(--green); font-weight:700;">$0.90</span></td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>YouTube Monetizable Views</td>
+                  <td><span style="color:var(--green); font-weight:700;">$2.20</span></td>
+                  <td>500</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Facebook Profile/Page Followers</td>
+                  <td><span style="color:var(--green); font-weight:700;">$1.10</span></td>
+                  <td>200</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WhatsApp Floating Support -->
+  <a href="https://wa.me/923100198156?text=Hello%20Raza%20SMM%20Panel%20Support," target="_blank" class="whatsapp-float">
+    <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+  </a>
+
+  <script>
+    let loggedUserEmail = "";
+
+    // Google Login Callback
+    function handleCredentialResponse(response) {
+      const payload = JSON.parse(atob(response.credential.split('.')[1]));
+      loggedUserEmail = payload.email;
+
+      // Hide Auth Screen & Show App UI
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('appScreen').style.display = 'flex';
+      document.getElementById('userName').innerText = payload.name;
+
+      fetchUserData();
+    }
+
+    // Switch Navigation Tabs
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+      event.currentTarget.classList.add('active');
+      document.getElementById('tab-' + tabName).classList.add('active');
+    }
+
+    // Calculate Price for Order
+    function calculateCost() {
+      const serviceSelect = document.getElementById('service');
+      const rate = parseFloat(serviceSelect.options[serviceSelect.selectedIndex].getAttribute('data-price'));
+      const qty = parseInt(document.getElementById('quantity').value) || 0;
+      document.getElementById('totalCharge').innerText = '$' + ((qty / 1000) * rate).toFixed(2);
+    }
+
+    // Fetch Balance
+    async function fetchUserData() {
+      const res = await fetch('/api/user/' + loggedUserEmail);
+      const data = await res.json();
+      if(data.success) {
+        document.getElementById('userBalance').innerText = '$' + data.user.balance.toFixed(2);
+      }
+    }
+
+    // Submit Deposit Request
+    async function submitDeposit() {
+      const trxId = document.getElementById('trxId').value;
+      const amount = document.getElementById('depositAmount').value;
+      const method = document.getElementById('payMethod').value;
+
+      if(!trxId || !amount) return alert('Transaction ID aur Amount dono enter karein!');
+
+      const res = await fetch('/api/deposit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email: loggedUserEmail, trxId, amount, method })
+      });
+      const data = await res.json();
+      alert(data.message || data.error);
+    }
+
+    // Submit Order
+    async function submitOrder() {
+      const serviceId = document.getElementById('service').value;
+      const link = document.getElementById('targetLink').value;
+      const quantity = parseInt(document.getElementById('quantity').value);
+      const serviceSelect = document.getElementById('service');
+      const pricePerThousand = parseFloat(serviceSelect.options[serviceSelect.selectedIndex].getAttribute('data-price'));
+
+      if(!link || quantity < 100) return alert('Sahi Target Link aur Quantity enter karein!');
+
+      const res = await fetch('/api/order', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email: loggedUserEmail, serviceId, link, quantity, pricePerThousand })
+      });
+      const data = await res.json();
+      if(data.success) {
+        alert(data.message);
+        fetchUserData();
+      } else {
+        alert(data.error);
+      }
+    }
+  </script>
+</body>
+</html>
